@@ -1,5 +1,9 @@
 # [MODIFIED] VERSION OF  IMPORTING SPY_DETAILS.
 from spy_details import spy
+from steganography.steganography import Steganography
+from datetime import datetime
+import os
+# import os / os.path  To check whether file path exists or not.
 
 spy['name'] = '%s%s'%(spy['salutation'],spy['name'])
 
@@ -91,9 +95,69 @@ def select_a_friend() :
         print '%d.) %s aged - %d with rating - %.2f is online' %(friend_position,friend['name'], friend['age'], friend['rating'])
         friend_position += 1
     friend_selection = input("Choose from the above friends : ")
-    friend_selection_position = friend_selection - 1
-    return friend_selection_position
+    if len(friends) >= friend_selection and friend_selection != 0:
+        friend_selection_position = friend_selection - 1
+        return friend_selection_position
+    else :
+        print ("!!!!!!selecting blank friend.  [ Restarting..]")
+        return start_chat(spy)
 # [END] of function block select_a_friend() .
+
+
+# [Defining - Function] send_message() .
+def send_message() :
+    friend_selection = select_a_friend()    # Calling function select_a_friend().
+    original_image = raw_input("What is the name of the image ? : ")
+    # ext = os.path.splitext(original_image)[-1].lower()
+    # ext = original_image.split(".")[1]
+    # the above code outputs when printed['input', 'mp3']
+    file_name,ext = os.path.splitext(original_image)           # file_name = [file name]eg. input , ext = [file extension]eg. jpeg
+    # os.path.splitext(file) will return a tuple with two values (the filename without extension + just the extension).
+    #  The second index ([1]) will therefor give you just the extension.
+    # The cool thing is, that this way you can also access the filename pretty easily, if needed!
+    # os.path provides many functions for manipulating paths/file_names.
+    # os.path.splitext takes a path and splits the file extension from the end of it.
+
+    if ( ext == '.jpeg' or ext == '.png' or ext == '.jpg' or ext == '.gif') :
+        print ("It is valid image format with extension : %s " % ext)
+
+        if (os.path.exists(original_image)) : # This statement checks whether the file exists or not.
+             print ("Verified!..! file [%s] exists" % (original_image))
+             output_path = 'output.jpeg'
+             text = raw_input("What do you want to say?")
+             Steganography.encode(original_image,output_path,text)
+
+             new_chat = {
+                'message'   : text ,
+                'time'      : datetime.now() ,
+                'sent_by_me': True
+             }
+
+             friends[friend_selection]['chats'].append(new_chat)
+             print ("Your secret message image is ready!")
+        else :
+            print ("Sorry!! This file does not exist. ")
+
+    else :
+         print ("It is [ %s ] format which is not an image format." % ext)
+# [END] of function block send_message() .
+
+
+# [Defining - Function] read_message() .
+def read_message() :
+    sender = select_a_friend()
+    output_path = input("What is the name of the file?")
+    secret_text = Steganography.decode(output_path)
+    print (secret_text)
+    new_chat = {
+        "message"   : secret_text ,
+        "time"      : datetime.now(),
+        "sent_by_me": False
+    }
+
+    friends[sender]['chats'].append(new_chat)
+    print "Your secret message has been saved!"
+# [END] of function block read_message() .
 
 
 # [Defining - Function] start_chat() .
@@ -120,9 +184,11 @@ def start_chat(spy) :
             # [Send a secret message]
             elif (menu_choice == 3) :
                 print "%s you should have secrecy let\'s send secret messages to your friends" % (spy['name'])
+                send_message()
             # [Read a secret message]
             elif (menu_choice == 4) :
                 print "Hey %s let\'s read personal messages" % (spy['name'])
+                read_message()
             # [Read Chats from a user]
             elif (menu_choice == 5) :
                 print "Oh Yea!!\n %s now let\'s read chats from other users" % (spy['name'])
