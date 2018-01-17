@@ -8,6 +8,32 @@ spy = {
   'is_online': True
 }
 
+# Adding default friends .
+# Creating dictionary elements in the list .
+friends = [
+  {
+      'name'      :'Dhruv',
+      'salutation':'Mr.',
+      'rating'    : 5,
+      'age'       : 21,
+      'chats'     : []
+  },
+  {
+      'name'      :'Lethal',
+      'salutation':'Mr.',
+      'rating'    : 7,
+      'age'       : 23,
+      'chats'     : []
+  },
+  {
+      'name'      :'Remo',
+      'salutation':'Ms.',
+      'rating'    : 6,
+      'age'       : 45,
+      'chats'     : []
+  }
+]
+
 
 #----------[ALTERNATIVE METHOD]------
 

@@ -1,4 +1,5 @@
 # [MODIFIED] VERSION OF  IMPORTING SPY_DETAILS.
+from spy_details import friends
 from spy_details import spy
 from steganography.steganography import Steganography
 from datetime import datetime
@@ -10,7 +11,7 @@ spy['name'] = '%s%s'%(spy['salutation'],spy['name'])
 # [ Defining - List ]
 STATUS_MESSAGES = ["Born leader" , "Thug life" , "James bond" ]
 
-friends = []
+# friends = []
 
 print ("Hello!!!!\nyo! what\'s up.\nLet\'s get started.\nWelcome to spy chat , firstly I need to know you... ")
 
@@ -61,10 +62,11 @@ def add_status(current_status):
 # [Defining - Function] add_friend() .
 def add_friend():
     new_friend = {
-        'name': '',
+        'name'      : '',
         'salutation': '',
-        'age': 0,
-        'rating': 0.0
+        'age'       : 0,
+        'rating'    : 0.0,
+        'chats'     : []
     }
 
     new_friend['name'] = raw_input("Please add your friend's name : ")
@@ -92,7 +94,8 @@ def add_friend():
 def select_a_friend() :
     friend_position = 1
     for friend in friends:
-        print '%d.) %s aged - %d with rating - %.2f is online' %(friend_position,friend['name'], friend['age'], friend['rating'])
+        friend['name'] = '%s%s'%(friend['salutation'],friend['name'])
+        print '%d.) %s aged-%d  with  rating-%.2f is online' %(friend_position,friend['name'], friend['age'], friend['rating'])
         friend_position += 1
     friend_selection = input("Choose from the above friends : ")
     if len(friends) >= friend_selection and friend_selection != 0:
