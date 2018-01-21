@@ -1,0 +1,9 @@
+  name   , salutation , age , rating , is_online
+
+ Harshit ,    Mr      , 20  ,  8.0   ,  True
+ Prince  ,    Mr      , 20  ,  9.0   ,  True
+ Vikram  ,    Mr      , 21  ,  7.0   ,  True
+ Raghav  ,    Mr      , 34  ,  5     ,  True
+ Srishty ,    Ms      , 22  ,  7     ,  True
+ Shard   ,    Mr      , 45  ,  9     ,  True
+ Puneet  ,    Mr      , 20  ,  8     ,  True
