@@ -20,7 +20,9 @@ class Chat_messages :
         self.message    = message
         time            = datetime.now()
         self.time       = time.strftime(reverse+Fg.yellow+Bg.black+"DATE - %d/%b/%Y"+reset+"       "
-                                                  +bold+Fg.white+Bg.cyan+"TIME - [%I:%M:%S %p]"+reset)
+                                                 +bold+Fg.white+Bg.cyan+"TIME - [%I:%M:%S %p]"+reset)
+        #time.strftime("DATE - %d/%b/%Y  TIME - [%I:%M:%S %p]")
+
         self.sent_by_me = sent_by_me
 
 

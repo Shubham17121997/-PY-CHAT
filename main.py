@@ -187,7 +187,11 @@ def send_message() :
              Steganography.encode(original_image,output_path,text)
              sent_by_me = True
 
-             new_chat = Chat_messages(text,sent_by_me)
+             new_chat = Chat_messages(text,True)
+
+             with open ('chats.csv', 'ab') as chat_data:
+                                write = csv.writer(chat_data)
+                                write.writerow([spy.name , friends[friend_selection].name, new_chat.message, new_chat.time, sent_by_me])
 
              friends[friend_selection].chats.append(new_chat)
              print (Fg.black+Bg.yellow+" Your secret message image is ready!"+reset+"\n")
@@ -218,12 +222,35 @@ def read_message() :
 
             # [DECODING] the message from the image using decode method .
             secret_text = Steganography.decode(output_path)
-            print (bold+Fg.yellow+" SECRET MESSAGE - "+bold+Fg.black+Bg.white+secret_text+reset)
-            sent_by_me = False
-            new_chat = Chat_messages(secret_text,sent_by_me)
+            print (bold+Fg.yellow+" SECRET MESSAGE - "+bold+Fg.black+Bg.white+secret_text+reset+"\n")
 
-            friends[sender].chats.append(new_chat)
-            print ("\n"+Fg.blue+" Your secret message has been saved!"+reset+"\n")
+            #converting the secret_txt to uppercase
+            new = (secret_text.upper()).split()
+
+            #checking emergency templates for help
+            if "SOS" in new or "SAVE" in new or "HELP" in new or "ACCIDENT" in new or "RESCUE" in new or "ALERT" in new:
+                  print (bold+reverse+Bg.yellow+Fg.black+"====================!! W A R N I N G !!====================="+reset)
+                  time.sleep(2)
+                  print (Fg.black+Bg.yellow+" Your friend the sender of this message need an emergency. "+reset)
+                  print (Fg.black+Bg.yellow+" Please help your friend by sending him a helping message. "+reset)
+                  print (Fg.black+Bg.yellow+" Select that friend to send him a helping message.         "+reset+"\n")
+
+                  #calling send_help_msg() to send the help
+                  send_help_msg()
+
+                  print (Fg.cyan+" You have sent a message to help your friend")
+
+                  sent_by_me = False
+                  # Creating new chat.
+                  new_chat = Chat_messages(secret_text,sent_by_me)
+                  # Appending to chats.
+                  friends[sender].chats.append(new_chat)
+
+            else :
+                  sent_by_me = False
+                  new_chat = Chat_messages(secret_text, sent_by_me)
+                  friends[sender].chats.append(new_chat)
+                  print ("\n"+Fg.blue+" Your secret message has been saved!"+reset+"\n")
 
         else :
             print (reverse+bold+Fg.yellow+Bg.black+" SORRY!!!"+Fg.white+Bg.brown+" This file does not exist. "+reset)
@@ -240,24 +267,34 @@ def read_chats():
 
      read_from = select_a_friend()
 
-     for Chat_messages in friends[read_from].chats:
-
-        if Chat_messages.sent_by_me:
-             print (str(Chat_messages.time.strftime(reverse+Fg.yellow+Bg.black+"DATE - %d/%b/%Y"+reset+"       "
-                                                  +bold+Fg.white+Bg.cyan+"TIME - [%I:%M:%S %p]"+reset)))
-
-             print(Fg.yellow+"You:")
-
-             print str(Chat_messages.message)
-
-        else:
-             print (str(Chat_messages.time.strftime(reverse+Fg.yellow+Bg.black+"DATE - %d/%b/%Y"+reset+"       "
-                                                  +bold+Fg.white+Bg.cyan+"TIME - [%I:%M:%S %p]"+reset)))
-
-             print (str(friends[read_from].name)+Fg.cyan+"He:")
-
-             print str(Chat_messages.message)
+     with open ('chats.csv', 'rb') as chat_data :  # opening chats to to read chat
+         read = csv.reader(chat_data)
+         print("\n"+bold+Fg.dark_grey+Bg.white+" THESE ARE YOUR CHAT HISTORY : "+reset+"\n")
+         time.sleep(2)
+         for row in read :
+             print ((bold+Fg.white+Bg.light_white).join(row)+reset)
+     print("\n")
 # [END] of function block read_chats() .
+
+
+#==================================================HELP_MESSAGE====================================================
+
+
+# [Defining - Function] send_help_msg() .
+def send_help_msg():
+
+    # Selecting the friend
+    friend_selection = select_a_friend()
+
+    # The text response
+    txt = Fg.yellow+"Don't panic I am on my way to reach you!"
+
+    # Creating new chat
+    new_chat = Chat_messages(txt , True)
+
+    # Appending the chat
+    friends[friend_selection].chats.append(new_chat)
+# [END] of function block send_help_msg() .
 
 
 #******************************************** +@ START CHAT MODULE @+ **************************************************
@@ -312,7 +349,7 @@ def start_chat(spy) :
             # [Read Chats from a user]
             elif (menu_choice == 5) :
                 print (bold+Fg.light_cyan+" Oh Yea!!\n"+
-                       bold+Fg.yellow+" %s "+bold+Fg.light_cyan+"now let\'s read chats from other users")
+                       bold+Fg.yellow+" %s "% (spy.name)+bold+Fg.light_cyan+"now let\'s read chats from other users")
                 read_chats()
                 time.sleep(3)
             # [EXIT]
